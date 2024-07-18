@@ -27,10 +27,9 @@
         v-for="(todo, index) in todos"
         :key="index"
     >
-			<span
-          :class="{ done: todo.done }"
-          @click="doneTodo(todo)"
-      >{{ todo.fullName }}</span>
+      <h3>{{todo.title}}</h3>
+      <p>{{todo.description}}</p>
+      <p>Crée le {{todo.createdAt}}</p>
       <button @click="removeTodo(index)">Remove</button>
     </li>
   </ul>
@@ -58,16 +57,6 @@ function addTodo() {
   axios.post('/api/todos', newTodo).then(() => {
     fetchData()
     newTodo.value = {...blankTodo}
-  })
-}
-
-function doneTodo(todo) {
-  todo.done = !todo.done
-  axios.put('/api/todos', {
-    id: todo.id,
-    done: todo.done,
-  }).then(() => {
-    fetchData()
   })
 }
 
