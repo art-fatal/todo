@@ -1,13 +1,25 @@
 <template>
   <h1>ToDo App</h1>
   <form @submit.prevent="addTodo()">
-    <label>New ToDo </label>
-    <input
-        v-model="newTodo"
-        name="newTodo"
-        autocomplete="off"
-    >
-    <button>Add ToDo</button>
+    <div>
+      <label>New ToDo </label>
+      <input
+          v-model="newTodo.title"
+          name="newTodo"
+          autocomplete="off"
+      >
+    </div>
+    <div>
+      <label>New ToDo </label>
+      <input
+          v-model="newTodo.description"
+          name="newTodo"
+          autocomplete="off"
+      >
+    </div>
+    <div>
+      <button>Add ToDo</button>
+    </div>
   </form>
   <h2>ToDo List</h2>
   <ul>
@@ -30,52 +42,50 @@ import {inject, onMounted, ref} from 'vue';
 
 const axios = inject('axios')  // inject axios
 
-const newTodo = ref('');
+const blankTodo = {title: '', description: ''};
+
+const newTodo = ref({...blankTodo});
 
 const defaultData = [{
   done: false,
-  fullName: 'Write a blog post'
+  title: 'Write a blog post',
+  description: 'This is a description'
 }]
 
 const todos = ref(defaultData);
 
 function addTodo() {
-  if (newTodo.value) {
-    todos.value.push({
-      done: false,
-      content: newTodo.value
-    });
-    newTodo.value = '';
-  }
-  axios.post('/api/todos', {
-    title: newTodo.value,
-    description: 'This is a description'
-  }).then((response) => {
-    console.log(response.data)
+  axios.post('/api/todos', newTodo).then(() => {
+    fetchData()
+    newTodo.value = {...blankTodo}
   })
 }
 
 function doneTodo(todo) {
   todo.done = !todo.done
   axios.put('/api/todos', {
-    title: newTodo.value,
-    description: 'This is a description'
-  }).then((response) => {
-    console.log(response.data)
+    id: todo.id,
+    done: todo.done,
+  }).then(() => {
+    fetchData()
   })
 }
 
 function removeTodo(index) {
   todos.value.splice(index, 1);
 
-  axios.delete(`/api/todos${index}`).then((response) => {
-    console.log(response)
+  axios.delete(`/api/todos${index}`).then(() => {
+    fetchData()
   })
 }
 
-onMounted(() => {
-  axios.get('/api/commercials').then((response) => {
+const fetchData = () => {
+  axios.get('/api/todos').then((response) => {
     todos.value = response.data
   })
+};
+
+onMounted(() => {
+  fetchData()
 })
 </script>
