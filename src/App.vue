@@ -67,6 +67,10 @@ function doneTodo(todo) {
 
 function removeTodo(index) {
   todos.value.splice(index, 1);
+
+  axios.delete(`/api/todos${index}`).then((response) => {
+    console.log(response)
+  })
 }
 
 onMounted(() => {
