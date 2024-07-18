@@ -2,7 +2,7 @@
   <h1>ToDo App</h1>
   <form @submit.prevent="addTodo()">
     <div>
-      <label>New ToDo </label>
+      <label>Titre</label>
       <input
           v-model="newTodo.title"
           name="newTodo"
@@ -10,7 +10,7 @@
       >
     </div>
     <div>
-      <label>New ToDo </label>
+      <label>Description </label>
       <input
           v-model="newTodo.description"
           name="newTodo"
